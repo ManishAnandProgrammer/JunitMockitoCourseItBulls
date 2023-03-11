@@ -2,6 +2,7 @@ package com.manish.moneytransfer;
 
 import com.manish.exceptions.NotEnoughAmountException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,15 +13,18 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Money Transfer Service Tests")
 class MoneyTransferServiceTest {
 
     @Test
+    @DisplayName("Test If We Are Able To Create Object Of MoneyTransferService")
     void testObjectCreation() {
         MoneyTransferService moneyTransferService = new MoneyTransferService();
         Assertions.assertNotNull(moneyTransferService);
     }
 
     @Test
+    @DisplayName("On Successfully Money Transfer transferMoney Method Should Return True")
     void whenSendingMoneyFromOneAccountToAnotherItShouldReturnTrue() {
         final Account fromAccount = new Account();
         final int balanceInFirstAccount = 100;
@@ -40,25 +44,26 @@ class MoneyTransferServiceTest {
 
     @ParameterizedTest
     @MethodSource("moneyTransferArguments")
-    void whenSendingMoneyFromOneAccountToAnotherItShouldChangeBalanceInBothAccounts(final int balanceInFirstAccount,
-                                                                                    final int balanceInSecondAccount,
+    @DisplayName("Transferred Money Should Add In To-Account And Subtract From From-Account")
+    void whenSendingMoneyFromOneAccountToAnotherItShouldChangeBalanceInBothAccounts(final int balanceInFromAccount,
+                                                                                    final int balanceInToAccount,
                                                                                     final double amountOfMoneyTransfer) {
         final Account fromAccount = new Account();
-        fromAccount.setAmount(balanceInFirstAccount);
+        fromAccount.setAmount(balanceInFromAccount);
 
         final Account toAccount = new Account();
-        toAccount.setAmount(balanceInSecondAccount);
+        toAccount.setAmount(balanceInToAccount);
 
         final MoneyTransferService moneyTransferService = new MoneyTransferService();
         moneyTransferService.transferMoney(fromAccount, toAccount, amountOfMoneyTransfer);
 
         final double afterTransferAmountInFromAccount = fromAccount.getAmount();
-        final double afterTransferAmountInFromAccountMustBe = balanceInFirstAccount - amountOfMoneyTransfer;
+        final double afterTransferAmountInFromAccountMustBe = balanceInFromAccount - amountOfMoneyTransfer;
 
         assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount);
 
         final double afterTransferAmountInToAccount = toAccount.getAmount();
-        final double afterTransferAmountInToAccountMustBe = balanceInSecondAccount + amountOfMoneyTransfer;
+        final double afterTransferAmountInToAccountMustBe = balanceInToAccount + amountOfMoneyTransfer;
 
         assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount);
     }
@@ -72,6 +77,7 @@ class MoneyTransferServiceTest {
     }
 
     @Test
+    @DisplayName("If From-Account Is Null IllegalArgumentException Should Thrown")
     void whenFromAccountIsNullItShouldThrowIllegalArgumentException() {
         final Account secondAccount = new Account();
 
@@ -85,6 +91,7 @@ class MoneyTransferServiceTest {
     }
 
     @Test
+    @DisplayName("If To-Account Is Null IllegalArgumentException Should Thrown")
     void whenToAccountIsNullItShouldThrowIllegalArgumentException() {
         final Account fromAccount = new Account();
 
@@ -100,6 +107,7 @@ class MoneyTransferServiceTest {
 
     @ParameterizedTest
     @ValueSource(doubles = {0, -1, -323})
+    @DisplayName("On Zero Or Negative Transfer Value IllegalArgumentException Should Thrown")
     void whenTransferValueIsLessThanOrEqualToZeroItShouldThrowIllegalArgumentException(final double amountToTransfer) {
         final Account fromAccount = new Account();
         fromAccount.setAmount(10);
@@ -119,16 +127,17 @@ class MoneyTransferServiceTest {
 
     @ParameterizedTest
     @MethodSource("moneyTransferNotEnoughAmountArguments")
+    @DisplayName("If Amount To Transfer Is Greater Than Balance In From-Account Should Throw NotEnoughAmountException")
     void ifNotEnoughBalanceInFromAccountToTransferThanShouldThrowNotEnoughAmountException(
-            final int balanceInFirstAccount,
-            final int balanceInSecondAccount,
+            final int balanceInFromAccount,
+            final int balanceInToAccount,
             final double amountOfMoneyTransfer
     ) {
         final Account fromAccount = new Account();
-        fromAccount.setAmount(balanceInFirstAccount);
+        fromAccount.setAmount(balanceInFromAccount);
 
         final Account toAccount = new Account();
-        toAccount.setAmount(balanceInSecondAccount);
+        toAccount.setAmount(balanceInToAccount);
 
         final MoneyTransferService moneyTransferService = new MoneyTransferService();
         final NotEnoughAmountException notEnoughAmountException = assertThrows(NotEnoughAmountException.class, () ->
