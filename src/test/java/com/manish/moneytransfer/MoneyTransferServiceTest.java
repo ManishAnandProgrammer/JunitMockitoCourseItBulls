@@ -10,8 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MoneyTransferServiceTest {
 
@@ -56,12 +55,12 @@ class MoneyTransferServiceTest {
         final double afterTransferAmountInFromAccount = fromAccount.getAmount();
         final double afterTransferAmountInFromAccountMustBe = balanceInFirstAccount - amountOfMoneyTransfer;
 
-        Assertions.assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount);
+        assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount);
 
         final double afterTransferAmountInToAccount = toAccount.getAmount();
         final double afterTransferAmountInToAccountMustBe = balanceInSecondAccount + amountOfMoneyTransfer;
 
-        Assertions.assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount);
+        assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount);
     }
 
     private static Stream<Arguments> moneyTransferArguments() {
@@ -73,7 +72,7 @@ class MoneyTransferServiceTest {
     }
 
     @Test
-    void whenFirstAccountIsNullItShouldThrowIllegalArgumentException() {
+    void whenFromAccountIsNullItShouldThrowIllegalArgumentException() {
         final Account secondAccount = new Account();
 
         final MoneyTransferService moneyTransferService = new MoneyTransferService();
@@ -82,59 +81,63 @@ class MoneyTransferServiceTest {
         );
         final String actualExceptionMessage = illegalArgumentException.getMessage();
         final String expectedExceptionMessage = "Accounts Shouldn't Be Null";
-        Assertions.assertEquals(expectedExceptionMessage, actualExceptionMessage);
+        assertEquals(expectedExceptionMessage, actualExceptionMessage);
     }
 
     @Test
-    void whenSecondAccountIsNullItShouldThrowIllegalArgumentException() {
-        Account firstAccount = new Account();
+    void whenToAccountIsNullItShouldThrowIllegalArgumentException() {
+        final Account fromAccount = new Account();
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
-                moneyTransferService.transferMoney(firstAccount, null, 100)
+                moneyTransferService.transferMoney(fromAccount, null, 100)
         );
 
-        String message = illegalArgumentException.getMessage();
-        Assertions.assertEquals("Accounts Shouldn't Be Null", message);
+        final String actualExceptionMessage = illegalArgumentException.getMessage();
+        final String expectedExceptionMessage = "Accounts Shouldn't Be Null";
+        assertEquals(expectedExceptionMessage, actualExceptionMessage);
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {0, -1, -323})
-    void whenTransferValueIsLessThanOrEqualToZeroItShouldThrowIllegalArgumentException(double amountToTransfer) {
-        Account firstAccount = new Account();
-        firstAccount.setAmount(10);
+    void whenTransferValueIsLessThanOrEqualToZeroItShouldThrowIllegalArgumentException(final double amountToTransfer) {
+        final Account fromAccount = new Account();
+        fromAccount.setAmount(10);
 
-        Account secondAccount = new Account();
-        secondAccount.setAmount(10);
+        final Account toAccount = new Account();
+        toAccount.setAmount(10);
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
-            moneyTransferService.transferMoney(firstAccount, secondAccount, amountToTransfer)
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
+        final IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
+            moneyTransferService.transferMoney(fromAccount, toAccount, amountToTransfer)
         );
 
-        String message = illegalArgumentException.getMessage();
-        Assertions.assertEquals("Transfer Amount Should Be Greater Than Zero", message);
+        final String actualExceptionMessage = illegalArgumentException.getMessage();
+        final String expectedExceptionMessage = "Transfer Amount Should Be Greater Than Zero";
+        assertEquals(expectedExceptionMessage, actualExceptionMessage);
     }
 
     @ParameterizedTest
     @MethodSource("moneyTransferNotEnoughAmountArguments")
-    void ifNotEnoughBalanceInFirstAccountToTransferToSecondAccountThanShouldThrowNotEnoughAmountException(
-            int balanceInFirstAccount, int balanceInSecondAccount, double amountOfMoneyTransfer
+    void ifNotEnoughBalanceInFromAccountToTransferThanShouldThrowNotEnoughAmountException(
+            final int balanceInFirstAccount,
+            final int balanceInSecondAccount,
+            final double amountOfMoneyTransfer
     ) {
-        Account firstAccount = new Account();
-        firstAccount.setAmount(balanceInFirstAccount);
+        final Account fromAccount = new Account();
+        fromAccount.setAmount(balanceInFirstAccount);
 
-        Account secondAccount = new Account();
-        secondAccount.setAmount(balanceInSecondAccount);
+        final Account toAccount = new Account();
+        toAccount.setAmount(balanceInSecondAccount);
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
-
-        NotEnoughAmountException notEnoughAmountException = assertThrows(NotEnoughAmountException.class, () ->
-            moneyTransferService.transferMoney(firstAccount, secondAccount, amountOfMoneyTransfer)
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
+        final NotEnoughAmountException notEnoughAmountException = assertThrows(NotEnoughAmountException.class, () ->
+            moneyTransferService.transferMoney(fromAccount, toAccount, amountOfMoneyTransfer)
         );
 
-        String message = notEnoughAmountException.getMessage();
-        Assertions.assertEquals("Doesn't Have Enough Balance To Transfer", message);
+        final String actualExceptionMessage = notEnoughAmountException.getMessage();
+        final String expectedExceptionMessage = "Doesn't Have Enough Balance To Transfer";
+        assertEquals(expectedExceptionMessage, actualExceptionMessage);
     }
 
     private static Stream<Arguments> moneyTransferNotEnoughAmountArguments() {
