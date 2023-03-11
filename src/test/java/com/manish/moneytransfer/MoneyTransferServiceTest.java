@@ -65,4 +65,14 @@ class MoneyTransferServiceTest {
             Arguments.of(70, 20, 20)
         );
     }
+
+    @Test
+    void whenFirstAccountIsNullItShouldThrowIllegalArgumentException() {
+        Account secondAccount = new Account();
+
+        MoneyTransferService moneyTransferService = new MoneyTransferService();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            moneyTransferService.transferMoney(null, secondAccount, 100);
+        });
+    }
 }
