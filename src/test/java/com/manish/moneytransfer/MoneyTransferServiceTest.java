@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class MoneyTransferServiceTest {
 
     @Test
@@ -71,9 +73,11 @@ class MoneyTransferServiceTest {
         Account secondAccount = new Account();
 
         MoneyTransferService moneyTransferService = new MoneyTransferService();
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
             moneyTransferService.transferMoney(null, secondAccount, 100)
         );
+        String message = illegalArgumentException.getMessage();
+        Assertions.assertEquals("Accounts Shouldn't Be Null", message);
     }
 
     @Test
@@ -81,8 +85,11 @@ class MoneyTransferServiceTest {
         Account firstAccount = new Account();
 
         MoneyTransferService moneyTransferService = new MoneyTransferService();
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
-            moneyTransferService.transferMoney(firstAccount, null, 100)
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
+                moneyTransferService.transferMoney(firstAccount, null, 100)
         );
+
+        String message = illegalArgumentException.getMessage();
+        Assertions.assertEquals("Accounts Shouldn't Be Null", message);
     }
 }

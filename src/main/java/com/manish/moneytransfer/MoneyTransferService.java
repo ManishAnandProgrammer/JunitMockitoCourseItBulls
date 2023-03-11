@@ -7,7 +7,7 @@ public class MoneyTransferService {
                                  Account secondAccount,
                                  double amountToTransfer) {
         if (Objects.isNull(firstAccount) || Objects.isNull(secondAccount)) {
-            throw new IllegalArgumentException("Accounts Can't Be Null");
+            throw new IllegalArgumentException("Accounts Shouldn't Be Null");
         }
         firstAccount.setAmount(firstAccount.getAmount() - amountToTransfer);
         secondAccount.setAmount(secondAccount.getAmount() + amountToTransfer);
