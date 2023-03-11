@@ -1,7 +1,7 @@
 package com.manish.moneytransfer;
 
+import com.manish.exceptions.NotEnoughAmountException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -112,4 +112,34 @@ class MoneyTransferServiceTest {
         String message = illegalArgumentException.getMessage();
         Assertions.assertEquals("Transfer Amount Should Be Greater Than Zero", message);
     }
+
+    @ParameterizedTest
+    @MethodSource("moneyTransferNotEnoughAmountArguments")
+    void ifNotEnoughBalanceInFirstAccountToTransferToSecondAccountThanShouldThrowNotEnoughAmountException(
+            int balanceInFirstAccount, int balanceInSecondAccount, double amountOfMoneyTransfer
+    ) {
+        Account firstAccount = new Account();
+        firstAccount.setAmount(balanceInFirstAccount);
+
+        Account secondAccount = new Account();
+        secondAccount.setAmount(balanceInSecondAccount);
+
+        MoneyTransferService moneyTransferService = new MoneyTransferService();
+
+        NotEnoughAmountException notEnoughAmountException = assertThrows(NotEnoughAmountException.class, () ->
+            moneyTransferService.transferMoney(firstAccount, secondAccount, amountOfMoneyTransfer)
+        );
+
+        String message = notEnoughAmountException.getMessage();
+        Assertions.assertEquals("Doesn't Have Enough Balance To Transfer", message);
+    }
+
+    private static Stream<Arguments> moneyTransferNotEnoughAmountArguments() {
+        return Stream.of(
+            Arguments.of(100, 100, 120),
+            Arguments.of(200, 100, 201),
+            Arguments.of(70, 20, 100)
+        );
+    }
+
 }

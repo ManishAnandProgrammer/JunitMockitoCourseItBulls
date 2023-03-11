@@ -1,5 +1,7 @@
 package com.manish.moneytransfer;
 
+import com.manish.exceptions.NotEnoughAmountException;
+
 import java.util.Objects;
 
 public class MoneyTransferService {
@@ -14,6 +16,10 @@ public class MoneyTransferService {
 
         if (amountToTransfer <= TRANSFER_AMOUNT_SHOULD_GREATER_THAN) {
             throw new IllegalArgumentException("Transfer Amount Should Be Greater Than Zero");
+        }
+
+        if (firstAccount.getAmount() < amountToTransfer) {
+            throw new NotEnoughAmountException("Doesn't Have Enough Balance To Transfer");
         }
 
         firstAccount.setAmount(firstAccount.getAmount() - amountToTransfer);
