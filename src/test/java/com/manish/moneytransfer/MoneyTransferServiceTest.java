@@ -71,8 +71,18 @@ class MoneyTransferServiceTest {
         Account secondAccount = new Account();
 
         MoneyTransferService moneyTransferService = new MoneyTransferService();
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            moneyTransferService.transferMoney(null, secondAccount, 100);
-        });
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+            moneyTransferService.transferMoney(null, secondAccount, 100)
+        );
+    }
+
+    @Test
+    void whenSecondAccountIsNullItShouldThrowIllegalArgumentException() {
+        Account firstAccount = new Account();
+
+        MoneyTransferService moneyTransferService = new MoneyTransferService();
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+            moneyTransferService.transferMoney(firstAccount, null, 100)
+        );
     }
 }
