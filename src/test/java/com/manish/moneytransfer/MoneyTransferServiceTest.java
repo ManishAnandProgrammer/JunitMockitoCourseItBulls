@@ -60,12 +60,13 @@ class MoneyTransferServiceTest {
         final double afterTransferAmountInFromAccount = fromAccount.getAmount();
         final double afterTransferAmountInFromAccountMustBe = balanceInFromAccount - amountOfMoneyTransfer;
 
-        assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount);
-
         final double afterTransferAmountInToAccount = toAccount.getAmount();
         final double afterTransferAmountInToAccountMustBe = balanceInToAccount + amountOfMoneyTransfer;
 
-        assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount);
+        assertAll("Money Transfer",
+            () -> assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount),
+            () -> assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount)
+        );
     }
 
     private static Stream<Arguments> moneyTransferArguments() {
