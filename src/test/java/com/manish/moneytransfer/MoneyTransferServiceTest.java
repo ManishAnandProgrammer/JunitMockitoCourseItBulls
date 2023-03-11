@@ -1,10 +1,12 @@
 package com.manish.moneytransfer;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -91,5 +93,23 @@ class MoneyTransferServiceTest {
 
         String message = illegalArgumentException.getMessage();
         Assertions.assertEquals("Accounts Shouldn't Be Null", message);
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0, -1, -323})
+    void whenTransferValueIsLessThanOrEqualToZeroItShouldThrowIllegalArgumentException(double amountToTransfer) {
+        Account firstAccount = new Account();
+        firstAccount.setAmount(10);
+
+        Account secondAccount = new Account();
+        secondAccount.setAmount(10);
+
+        MoneyTransferService moneyTransferService = new MoneyTransferService();
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
+            moneyTransferService.transferMoney(firstAccount, secondAccount, amountToTransfer)
+        );
+
+        String message = illegalArgumentException.getMessage();
+        Assertions.assertEquals("Transfer Amount Should Be Greater Than Zero", message);
     }
 }
