@@ -7,10 +7,10 @@ import java.util.Objects;
 public class MoneyTransferService {
     public static final int TRANSFER_AMOUNT_SHOULD_GREATER_THAN = 0;
 
-    public boolean transferMoney(Account firstAccount,
-                                 Account secondAccount,
-                                 double amountToTransfer) {
-        if (Objects.isNull(firstAccount) || Objects.isNull(secondAccount)) {
+    public boolean transferMoney(final Account fromAccount,
+                                 final Account toAccount,
+                                 final double amountToTransfer) {
+        if (Objects.isNull(fromAccount) || Objects.isNull(toAccount)) {
             throw new IllegalArgumentException("Accounts Shouldn't Be Null");
         }
 
@@ -18,12 +18,12 @@ public class MoneyTransferService {
             throw new IllegalArgumentException("Transfer Amount Should Be Greater Than Zero");
         }
 
-        if (firstAccount.getAmount() < amountToTransfer) {
+        if (fromAccount.getAmount() < amountToTransfer) {
             throw new NotEnoughAmountException("Doesn't Have Enough Balance To Transfer");
         }
 
-        firstAccount.setAmount(firstAccount.getAmount() - amountToTransfer);
-        secondAccount.setAmount(secondAccount.getAmount() + amountToTransfer);
+        fromAccount.setAmount(fromAccount.getAmount() - amountToTransfer);
+        toAccount.setAmount(toAccount.getAmount() + amountToTransfer);
         return true;
     }
 }

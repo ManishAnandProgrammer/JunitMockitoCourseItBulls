@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoneyTransferServiceTest {
 
@@ -22,44 +23,45 @@ class MoneyTransferServiceTest {
 
     @Test
     void whenSendingMoneyFromOneAccountToAnotherItShouldReturnTrue() {
-        Account firstAccount = new Account();
-        int balanceInFirstAccount = 100;
-        firstAccount.setAmount(balanceInFirstAccount);
+        final Account fromAccount = new Account();
+        final int balanceInFirstAccount = 100;
+        fromAccount.setAmount(balanceInFirstAccount);
 
-        Account secondAccount = new Account();
-        int balanceInSecondAccount = 100;
-        secondAccount.setAmount(balanceInSecondAccount);
+        final Account toAccount = new Account();
+        final int balanceInSecondAccount = 100;
+        toAccount.setAmount(balanceInSecondAccount);
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
-        double amountOfMoneyTransfer = 50.0;
-        boolean actualResult = moneyTransferService.transferMoney(firstAccount, secondAccount, amountOfMoneyTransfer);
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
+        final double amountOfMoneyTransfer = 50.0;
+        final boolean actualResult =
+                moneyTransferService.transferMoney(fromAccount, toAccount, amountOfMoneyTransfer);
 
-        Assertions.assertTrue(actualResult);
+        assertTrue(actualResult);
     }
 
     @ParameterizedTest
     @MethodSource("moneyTransferArguments")
-    void whenSendingMoneyFromOneAccountToAnotherItShouldChangeBalanceInBothAccounts(int balanceInFirstAccount,
-                                                                                    int balanceInSecondAccount,
-                                                                                    double amountOfMoneyTransfer) {
-        Account firstAccount = new Account();
-        firstAccount.setAmount(balanceInFirstAccount);
+    void whenSendingMoneyFromOneAccountToAnotherItShouldChangeBalanceInBothAccounts(final int balanceInFirstAccount,
+                                                                                    final int balanceInSecondAccount,
+                                                                                    final double amountOfMoneyTransfer) {
+        final Account fromAccount = new Account();
+        fromAccount.setAmount(balanceInFirstAccount);
 
-        Account secondAccount = new Account();
-        secondAccount.setAmount(balanceInSecondAccount);
+        final Account toAccount = new Account();
+        toAccount.setAmount(balanceInSecondAccount);
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
-        moneyTransferService.transferMoney(firstAccount, secondAccount, amountOfMoneyTransfer);
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
+        moneyTransferService.transferMoney(fromAccount, toAccount, amountOfMoneyTransfer);
 
-        double afterTransferAmountInFirstAccount = firstAccount.getAmount();
-        double afterTransferAmountInFirstAccountMustBe = balanceInFirstAccount - amountOfMoneyTransfer;
+        final double afterTransferAmountInFromAccount = fromAccount.getAmount();
+        final double afterTransferAmountInFromAccountMustBe = balanceInFirstAccount - amountOfMoneyTransfer;
 
-        Assertions.assertEquals(afterTransferAmountInFirstAccountMustBe, afterTransferAmountInFirstAccount);
+        Assertions.assertEquals(afterTransferAmountInFromAccountMustBe, afterTransferAmountInFromAccount);
 
-        double afterTransferAmountInSecondAccount = secondAccount.getAmount();
-        double afterTransferAmountInSecondAccountMustBe = balanceInSecondAccount + amountOfMoneyTransfer;
+        final double afterTransferAmountInToAccount = toAccount.getAmount();
+        final double afterTransferAmountInToAccountMustBe = balanceInSecondAccount + amountOfMoneyTransfer;
 
-        Assertions.assertEquals(afterTransferAmountInSecondAccountMustBe, afterTransferAmountInSecondAccount);
+        Assertions.assertEquals(afterTransferAmountInToAccountMustBe, afterTransferAmountInToAccount);
     }
 
     private static Stream<Arguments> moneyTransferArguments() {
@@ -72,14 +74,15 @@ class MoneyTransferServiceTest {
 
     @Test
     void whenFirstAccountIsNullItShouldThrowIllegalArgumentException() {
-        Account secondAccount = new Account();
+        final Account secondAccount = new Account();
 
-        MoneyTransferService moneyTransferService = new MoneyTransferService();
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
+        final MoneyTransferService moneyTransferService = new MoneyTransferService();
+        final IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () ->
             moneyTransferService.transferMoney(null, secondAccount, 100)
         );
-        String message = illegalArgumentException.getMessage();
-        Assertions.assertEquals("Accounts Shouldn't Be Null", message);
+        final String actualExceptionMessage = illegalArgumentException.getMessage();
+        final String expectedExceptionMessage = "Accounts Shouldn't Be Null";
+        Assertions.assertEquals(expectedExceptionMessage, actualExceptionMessage);
     }
 
     @Test
