@@ -1,5 +1,6 @@
-package com.manish;
+package com.manish.calculator;
 
+import com.manish.Calculator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
