@@ -1,4 +1,4 @@
-package com.manish.exceptions;
+package com.manish.itbulls.exceptions;
 
 public class NotEnoughAmountException extends RuntimeException {
     public NotEnoughAmountException() {

@@ -1,4 +1,4 @@
-package com.manish.testsuite;
+package com.manish.itbulls.testsuite;
 
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;

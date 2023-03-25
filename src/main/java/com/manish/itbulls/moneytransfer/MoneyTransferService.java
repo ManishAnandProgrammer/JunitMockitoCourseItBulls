@@ -1,6 +1,6 @@
-package com.manish.moneytransfer;
+package com.manish.itbulls.moneytransfer;
 
-import com.manish.exceptions.NotEnoughAmountException;
+import com.manish.itbulls.exceptions.NotEnoughAmountException;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package com.manish.moneytransfer;
+package com.manish.itbulls.moneytransfer;
 
 import org.junit.jupiter.api.Test;
 

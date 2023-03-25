@@ -1,4 +1,4 @@
-package com.manish;
+package com.manish.itbulls;
 
 public class Calculator {
 

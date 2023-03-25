@@ -1,4 +1,4 @@
-package com.manish.moneytransfer;
+package com.manish.itbulls.moneytransfer;
 
 import lombok.Getter;
 import lombok.Setter;
